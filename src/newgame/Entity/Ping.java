@@ -9,72 +9,89 @@ package newgame.Entity;
  * @author vivianwu
  */
 
-//import java.io.IOException;
-//import javax.imageio.ImageIO;
 import processing.core.PApplet;
-//import static processing.core.PConstants.DOWN;
-//import static processing.core.PConstants.LEFT;
-//import static processing.core.PConstants.RIGHT;
-//import static processing.core.PConstants.UP;
 import processing.core.PImage;
 
 public class Ping extends Entity{
-    public int x, y;
-    public String name;
-    private int age;
-    private PImage image;
     private PApplet app;
-    public int speed;
+    private PImage[] upImages = new PImage[2];
+    private PImage[] downImages = new PImage[2];
+    private PImage[] leftImages = new PImage[2];
+    private PImage[] rightImages = new PImage[2];
+    private int currentFrame = 0;
+    private int frameCounter = 0;
+    private final int FRAME_DELAY = 10;
     
-    public Ping (PApplet p, int x, int y, String name, int age, int speed, String imagePath) {
+    public Ping (PApplet p, int x, int y, int speed, String imagePath) {
         this.app = p;
         this.x = x;
         this.y = y;
-        this.name = name;
         this.speed = speed;
-        this.age = age;
-        this.image = app.loadImage(imagePath);
-        
-        //getPlayerImage();
-    }
-    
-    public void move() {
-        x = 100;
-        y = 100;
-        speed = 4;
-        direction = "down";
-    }
-    
-    public void draw() {
-        app.image(image, x, y);
-    }
-    /*
-    public void getPlayerImage() {
-        try {
-            up1 = ImageIO.read(getClass().getResourceAsStream("images/ping_up_1.png"));
-            up2 = ImageIO.read(getClass().getResourceAsStream("images/ping_up_2.png"));
-            down1 = ImageIO.read(getClass().getResourceAsStream("images/ping.png"));
-            down2 = ImageIO.read(getClass().getResourceAsStream("images/ping_down_2.png"));
-            left1 = ImageIO.read(getClass().getResourceAsStream("images/ping_left_1.png"));
-            left2 = ImageIO.read(getClass().getResourceAsStream("images/ping_left_2.png"));
-            right1 = ImageIO.read(getClass().getResourceAsStream("images/ping_right_1.png"));
-            right2 = ImageIO.read(getClass().getResourceAsStream("images/ping_right_2.png"));
+        this.direction = "down";            
 
-        } catch (IOException e) {
+        loadAnimationImages();
+    }
+    
+    public void loadAnimationImages() {
+        upImages[0] = app.loadImage("images/ping_up_1.png");
+        upImages[1] = app.loadImage("images/ping_up_2.png");
+        downImages[0] = app.loadImage("images/ping.png");
+        downImages[1] = app.loadImage("images/ping_down_2.png");
+        leftImages[0] = app.loadImage("images/ping_left_1.png");
+        leftImages[1] = app.loadImage("images/ping_left_2.png");
+        rightImages[0] = app.loadImage("images/ping_right_1.png");
+        rightImages[1] = app.loadImage("images/ping_right_2.png");
+    }    
+        
+    public void draw() {
+        PImage currentImage = getCurrentImage();
+        app.image(currentImage, x, y);
+    }
+    
+    public PImage getCurrentImage() {
+        switch(direction) {
+            case "up":
+                return upImages[currentFrame];
+            case "down":
+                return downImages[currentFrame];
+            case "left":
+                return leftImages[currentFrame];
+            case "right":
+                return rightImages[currentFrame];
+            default:
+                return downImages[currentFrame];
         }
     }
+
     
     public void update() {
         if (keyPressed) {
-        if (keyCode == LEFT) {
-          x -= speed;
-        } else if (keyCode == RIGHT) {
-          x += speed;
-        } else if (keyCode == UP) {
-          y -= speed;
-        } else if (keyCode == DOWN) {
-          y += speed;
-        } 
+            if (keyCode == LEFT) {
+                x -= speed;
+                direction = "left";
+                animate();
+            } else if (keyCode == RIGHT) {
+                x += speed;
+                direction = "right";
+                animate();
+            } else if (keyCode == UP) {
+                y -= speed;
+                direction = "up";
+                animate();
+            } else if (keyCode == DOWN) {
+                y += speed;
+                direction = "down";
+                animate();
+            } 
+        }
     }
-} */
-}
+    
+    private void animate() {
+        frameCounter++;
+        if (frameCounter > FRAME_DELAY) {
+            currentFrame = (currentFrame + 1 % 2);
+            frameCounter = 0;
+        }
+    }
+} 
+
