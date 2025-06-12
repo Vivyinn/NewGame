@@ -14,25 +14,43 @@ package newgame;
 
 import newgame.Entity.Ping;
 import processing.core.PApplet;
+import processing.core.PImage;
 
 public class NewSketch extends PApplet{
-    private Map map; // declare map object
-    private Ping mainCharacter;
+    private PImage gameBackground;
+    private PImage startScreen;
+    private Ping ping;   
+    private boolean gameStarted = false;
     
     public void settings() {
-        size (800, 800);
+        size (1200, 1000);
     }
     
     public void setup() {
-        background (100, 100, 100);
-        mainCharacter = new Ping(this, 3, 4, "Ping",20, 20, "images/ping.png");
-        //map = new Map(this, 0, 0, "Map", 0, "images/map.jpg");
+        gameBackground = loadImage("images/EMPTY POT.png");
+        startScreen = loadImage("images/EMPTY POT.png");
+        
+        ping = new Ping(this, width/2, height/2, 5);
+        
     }
     
     public void draw() {
-        background(255);
-        mainCharacter.draw();
-        map.draw();
+        if (!gameStarted) {
+            // Show start screen
+            image(startScreen, 0, 0, width, height);
+        } else {
+            // Show game
+            image(gameBackground, 0, 0, width, height);
+            ping.update();
+            ping.draw();
+        }
+    }
+    
+    public void keyPressed() {
+        if (!gameStarted && keyCode == ENTER) {
+            gameStarted = true;
+            ping.enableMovement(true); // Only allow movement after ENTER
+        } 
     }
        
   }
