@@ -99,5 +99,6 @@ public class Ping extends Entity{
             frameCounter = 0;
         }
     }
+    
 } 
 
