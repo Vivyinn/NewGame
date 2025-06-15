@@ -19,8 +19,9 @@ public class Ping extends Entity{
     private int frameCounter = 0; // 
     private final int FRAME_DELAY = 10;
     private boolean canMove = false; // locks movement until user hits ENTER to start game
+    private final boolean[] activeKeys = new boolean[4]; // tracks UP, RIGHT, DOWN, LEFT
     
-    public Ping (PApplet p, int x, int y, int speed) {
+    public Ping(PApplet p, int x, int y, int speed) {
         this.app = p;
         this.x = x;
         this.y = y;
@@ -100,5 +101,19 @@ public class Ping extends Entity{
         }
     }
     
+    public void handleKeyPress(int keyCode) {
+        if (keyCode == PApplet.UP) activeKeys[0] = true;
+        if (keyCode == PApplet.RIGHT) activeKeys[1] = true;
+        if (keyCode == PApplet.DOWN) activeKeys[2] = true;
+        if (keyCode == PApplet.LEFT) activeKeys[3] = true;
+        
+    }
+    
+    public void handleKeyRelease(int keyCode) {
+        if (keyCode == PApplet.UP) activeKeys[0] = false;
+        if (keyCode == PApplet.RIGHT) activeKeys[1] = false;
+        if (keyCode == PApplet.DOWN) activeKeys[2] = false;
+        if (keyCode == PApplet.LEFT) activeKeys[3] = false;
+    }
 } 
 
