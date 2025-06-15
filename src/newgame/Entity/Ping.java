@@ -14,21 +14,20 @@ import processing.core.PImage;
 
 public class Ping extends Entity{
     private final PApplet app; 
-    private final PImage[][] animations = new PImage[4][2]; // movement frame
+    private final PImage[][] animations = new PImage[4][2]; // stores animation movement frames
     private int currentFrame = 0; // the current animation frame (0 or 1)
-    private int frameCounter = 0; // 
+    private int frameCounter = 0; // frame counter for animation timing
     private final int FRAME_DELAY = 10;
     private boolean canMove = false; // locks movement until user hits ENTER to start game
     private final boolean[] activeKeys = new boolean[4]; // tracks UP, RIGHT, DOWN, LEFT
     
-    public Ping(PApplet p, int x, int y, int speed) {
-        this.app = p;
-        this.x = x;
-        this.y = y;
+    public Ping(PApplet sketch, float x, float y, int speed) {
+        super(sketch, x, y);
+        this.app = sketch;
         this.speed = speed;
-        this.direction = "down";            
+        this.direction = "down"; // default facing down direction
 
-        loadAnimationImages();
+        loadAnimationImages(); // load al animation frames
     }
     
     public void loadAnimationImages() {
@@ -59,6 +58,10 @@ public class Ping extends Entity{
 
     
     public PImage getCurrentImage() {
+        // default to first frame if null
+    if (animations == null || animations[0][0] == null) {
+        return sketch.loadImage("images/ping.png"); // Fallback image
+    }
         // converts direction string to array index
         int animIndex = switch (direction) { // takes direction string 
             case "up" -> 1; // index 1
@@ -66,7 +69,7 @@ public class Ping extends Entity{
             case "right" -> 3; //index3
             default -> 0; //index 0
         };
-        return animations[animIndex][currentFrame];
+        return animations[animIndex][currentFrame] != null ? animations[animIndex][currentFrame] : animations[0][0]; // fallback to first frame
     }
     
     
